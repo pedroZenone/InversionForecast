@@ -183,7 +183,7 @@ inversion = inversion.groupby(['DATE','ANO','MES','CATEGORIA','MARCA','ANUNCIANT
 inversion = inversion.reset_index()
 
 # saco el outlier
-inversion = inversion.loc[~((inversion.MARCA == "BAGGIO") & (inversion.ANO == 2011))]
+inversion = inversion.loc[~((inversion.MARCA == "OMMITED_BRAND") & (inversion.ANO == 2011))]
 
 # @brief: competencia_generator te genera un dataframe con la competencia y features agregados.
 # @param marcas_competencia: lista de marcas de la competencia.
@@ -260,17 +260,17 @@ def competencia_generator(marcas_competencia,categoria,IPC):
     return competencia
 
 # comienzo a generarme el dataframe apendeado con todas las competencias
-competencia1 = competencia_generator(['PEPSI','MANAOS'],'SSDs - COLAS',IPC.copy())
-competencia1 = competencia1.append(competencia_generator(['PASO DE LOS TOROS','MANAOS','SEVENUP'],'SSDs - FLAVORS',IPC.copy()),ignore_index = True)
-competencia1 = competencia1.append(competencia_generator(['VILLA DEL SUR','VILLAVICENCIO'],'PLAIN WATER',IPC.copy()),ignore_index = True)
-competencia1 = competencia1.append(competencia_generator(['BAGGIO'],'JUGOS',IPC.copy()),ignore_index = True)
-competencia1 = competencia1.append(competencia_generator(['GATORADE'],'ISOTONICS',IPC.copy()),ignore_index = True)
-competencia1 = competencia1.append(competencia_generator(['H2OH!','VILLAVICENCIO','VILLA DEL SUR LEVITE'],'FLAVOURED WATER',IPC.copy()),ignore_index = True)
+competencia1 = competencia_generator(['OMMITED_BRAND'],'SSDs - COLAS',IPC.copy())
+competencia1 = competencia1.append(competencia_generator(['OMMITED_BRAND'],'SSDs - FLAVORS',IPC.copy()),ignore_index = True)
+competencia1 = competencia1.append(competencia_generator(['OMMITED_BRAND'],'PLAIN WATER',IPC.copy()),ignore_index = True)
+competencia1 = competencia1.append(competencia_generator(['OMMITED_BRAND'],'JUGOS',IPC.copy()),ignore_index = True)
+competencia1 = competencia1.append(competencia_generator(['OMMITED_BRAND'],'ISOTONICS',IPC.copy()),ignore_index = True)
+competencia1 = competencia1.append(competencia_generator(['OMMITED_BRAND'],'FLAVOURED WATER',IPC.copy()),ignore_index = True)
 
 # Le saco 2018 y 2009 ya que no tienen data potable par ala prediccion (muchos nan)
 competencia = competencia1.loc[competencia1.ANO < 2018]
 competencia = competencia.loc[competencia.ANO > 2009]  
-competencia = competencia.loc[competencia.VOL_FISICO2 != 474439.5] # Saco outlier
+competencia = competencia.loc[competencia.VOL_FISICO2 != OMMITED_NUMBER] # Saco outlier
  
 cor_matrix = competencia.corr()  # evaluo correlaciones
 
@@ -350,9 +350,9 @@ modelo = pipe.fit(X,y)
 #joblib.dump(modelo, 'modelo_Anual.pkl') 
 
 # comparo las predicciones con los SOI de los años anteriores
-marcas_competencia = [['PEPSI','MANAOS'],['PASO DE LOS TOROS','SEVENUP'],['VILLA DEL SUR','VILLAVICENCIO'],['BAGGIO'],['H2OH!','VILLAVICENCIO','VILLA DEL SUR LEVITE'],['GATORADE']]
+marcas_competencia = OMMITED_BRAND
 categorias = ['SSDs - COLAS','SSDs - FLAVORS','PLAIN WATER','JUGOS','FLAVOURED WATER','ISOTONICS']
-marcas_KO = [['CCTM'],['FANTA','SPRITE','CRUSH','SCHWEPPES'],['BONAQUA','KIN','SMARTWATER'],['CEPITA','ADES'],['AQUARIUS','FUZE TEA','VITAMIN WATER'],['POWERADE']]
+marcas_KO = OMMITED_BRAND
 
 for i in range(len(marcas_competencia)): 
     competenciaFinal = competencia_generator(marcas_competencia[i],categorias[i],IPC.copy())
@@ -381,161 +381,6 @@ for i in range(len(marcas_competencia)):
     KO = KO.loc[KO.ANO == 2014]["INVERSION"].sum()
     print("Anterior 2014: ",KO/(KO+anterior))
     
-    
-# Me levanto las marcas que faltaron aparte ya que no las estoy encontrando en el archivo de inversion original... las levanto desde la DB
-
-# Levanto la competencia y la desafecto por la inversion
-#data1 = pd.read_csv(fileIn + '\\'+ "BaseIBOPEinversion.csv",sep = ";")
-#data1 = data1.loc[data1.PAIS == "ARGENTINA"]
-#data1["DATE"] = pd.to_datetime(data1.DATE,format = "%d/%m/%Y")
-#data1["MES"] = data1.DATE.apply(lambda x: x.month)
-#data1["ANO"] = data1.DATE.apply(lambda x: x.year)
-#data1.columns = my_columnReplace(data1.columns,"INVERSION_LC","INVERSION")
-#data1= pd.merge(data1,IPC_byAno,on=["ANO"])
-#data1["INVERSIONdesafectada"] = data1.apply(IPC_off,axis = 1)
-#data1["INVERSION"] = data1["INVERSIONdesafectada"]
-#data = data1.loc[((data1["MARCA"] == "VILLAVICENCIO LIV") | (data1["MARCA"] == "VILLA DEL SUR LEVITE") | (data1["MARCA"] == "H2OH!")) & (data1["CATEGORIA"] == "FLAVOURED WATER")]
-#data = data.groupby(['DATE','ANO','MES','CATEGORIA','MARCA','ANUNCIANTE','SUBCATEGORIA','PRIORIDAD'])[['INVERSION']].sum()
-#data = data.reset_index()
-#
-#
-#data = data.groupby(['ANO','MES'])[['INVERSION']].sum()
-#data = data.reset_index()
-#
-## Le agrego las metricas mensuales
-#aux_first = pd.DataFrame(data.groupby(['ANO'],axis = 0).apply(first_resume),columns = ["INVERSION_FIRST"])
-#aux_first = aux_first.reset_index()
-## Agrupo todo los años
-#data = data.groupby(['ANO'])[['INVERSION']].sum()
-#data = data.reset_index()
-## Agrego las metricas mensuales
-#data = pd.merge(data,aux_first, how = "left", on=['ANO'])
-## Me armo el dataframe
-#X = pd.DataFrame([{'INVERSION_FIRST': data.loc[data.ANO == 2018]["INVERSION_FIRST"].iloc[0],
-#              'INVERSION_FIRST1': data.loc[data.ANO == 2017]["INVERSION_FIRST"].iloc[0],
-#              'INVERSION2': data.loc[data.ANO == 2016]["INVERSION"].iloc[0],
-#              'sqrtInv1':np.sqrt(data.loc[data.ANO == 2017]["INVERSION"].iloc[0]) }])
-#X = X[['INVERSION_FIRST', 'INVERSION_FIRST1', 'INVERSION2', 'sqrtInv1']]
-#data.loc[data.ANO == 2018,"INVERSION"] = modelo.predict(X)[0]
-#
-#KO = pd.DataFrame(data1.loc[binary_gen(data1,["AQUARIUS","FUZE TEA","VITAMIN WATER"],"FLAVOURED WATER")])
-#KO_2017 = KO.loc[KO.ANO == 2017]["INVERSION"].sum()
-#KO_2016 = KO.loc[KO.ANO == 2016]["INVERSION"].sum()
-#
-#competencia = pd.DataFrame(data1.loc[binary_gen(data1,["VILLAVICENCIO LIV","VILLA DEL SUR LEVITE","H2OH!"] ,"FLAVOURED WATER")])
-#competencia_2017 = competencia.loc[competencia.ANO == 2017]["INVERSION"].sum()
-#competencia_2016 = competencia.loc[competencia.ANO == 2016]["INVERSION"].sum()
-#
-#print(KO_2017/(KO_2017+competencia_2017))
-#print(KO_2016/(KO_2017+competencia_2016))
-#
-#cols_import =['INVERSION_FIRST', 'INVERSION_FIRST1', 'INVERSION2', 'sqrtInv1']
-#
-#aux = data[["ANO","MES"]]; aux.columns = ['year','month']; aux['day'] = '1'
-#aux = pd.to_datetime(aux)
-#
-#
-##data = pd.read_excel("Inversion-Argentina- Marzo18.xlsx",sheet_name = "Actualizado a Marzo 2018")
-##data = data.loc[data["Clase de Vehículo"] != "Internet"] # saco internet que no tiene nada interesante...
-##data = data.loc[((data["Marca KO"] == "VILLAVICENCIO LIV") | (data["Marca KO"] == "VILLA DEL SUR LEVITE") | (data["Marca KO"] == "H2OH!")) & (data["Categoría KO"] == "FLAVOURED WATER") ]
-##data["Prioridad"] = "Core"
-##data["Sub-Categoria"] = "asd"
-##data = data[["MES2","Año","Categoría KO","Marca KO","Anunciante","Prioridad","Sub-Categoria","Medio","Seg Promedio","Vol. Físico","Cant. de Avisos","Inversión"]]
-##data.columns = ['MES','ANO','CATEGORIA','MARCA','ANUNCIANTE','PRIORIDAD','SUBCATEGORIA','MEDIO','SEG_PROM','VOL_FISICO','CANT_AVISOS','INVERSION']
-##month_norm = {'Ene':1,'Feb':2,'Mar':3,'Abr':4,'May':5,'Jun':6,'Jul':7,'Ago':8,'Sep':9,'Oct':10,'Nov':11,'Dic':12}
-##data.MES = data.MES.apply(lambda x: month_norm[x])
-##
-##data = pd.merge(data,IPC_byAno,on=["ANO"])
-##data["INVERSIONdesafectada"] = data.apply(IPC_off,axis = 1)
-##data["INVERSION"] = data["INVERSIONdesafectada"]
-##
-##data = competencia_generator2(data,IPC.copy())
-##data = data.groupby(['ANO'])[['VOL_FISICO','CANT_AVISOS','INVERSION']].sum()
-##data = data.reset_index()
-#
-#
-#def competencia_generator2(competencia,IPC):   
-#    
-#    # Primero filtro por competencia y sumo todas las marcas mensualmente
-#    competencia = competencia.groupby(['ANO','MES'])[['VOL_FISICO','CANT_AVISOS','INVERSION']].sum()
-#    competencia = competencia.reset_index()
-#    # me creo las metricas descriptivas del año
-#    aux_first = pd.DataFrame(competencia.groupby(['ANO'],axis = 0).apply(first_resume),columns = ["INVERSION_FIRST"])
-#    aux_first = aux_first.reset_index()
-#    aux_middle = pd.DataFrame(competencia.groupby(['ANO'],axis = 0).apply(middle_resume),columns = ["INVERSION_MIDDLE"])
-#    aux_middle = aux_middle.reset_index()
-#    aux_last = pd.DataFrame(competencia.groupby(['ANO'],axis = 0).apply(last_resume),columns = ["INVERSION_LAST"])
-#    aux_last = aux_last.reset_index()
-#    # Agrupo todo los años
-#    competencia = competencia.groupby(['ANO'])[['VOL_FISICO','CANT_AVISOS','INVERSION']].sum()
-#    competencia = competencia.reset_index()
-#    
-#    # le agrego las metricas agregadas
-#    competencia = pd.merge(competencia,aux_first, how = "left", on=['ANO'])
-#    competencia = pd.merge(competencia,aux_middle, how = "left", on=['ANO'])
-#    competencia = pd.merge(competencia,aux_last, how = "left", on=['ANO'])
-#    
-#    # Agrego distintas medidas agregadas
-#    competencia["SegProm"] = competencia["VOL_FISICO"]/competencia["CANT_AVISOS"]
-#    competencia.columns = my_columnReplace(competencia.columns,"INVERSION","target")
-#    competencia = add_previous(competencia,["INVERSION1","INVERSION2"],"target")
-#    competencia = add_previous(competencia,["CANT_AVISOS1","CANT_AVISOS2"],"CANT_AVISOS").drop(["CANT_AVISOS"],axis = 1)
-#    competencia = add_previous(competencia,["VOL_FISICO1","VOL_FISICO2"],"VOL_FISICO").drop(["VOL_FISICO"],axis = 1)
-#    competencia = add_previous(competencia,["SegProm1","SegProm2"],"SegProm").drop(["SegProm"],axis = 1)
-#    competencia["mundial"] = competencia.ANO.apply(lambda x: 1 if ((x % 2)== 0) else 0) # los mundiales y juegos olimpicos se dan en los años pares
-#    competencia["logInv1"] = np.log(competencia["INVERSION1"])
-#    competencia["Inv2_1"] = competencia["INVERSION1"]*competencia["INVERSION1"]
-#    competencia["sqrtInv1"] = np.sqrt(competencia["INVERSION1"])
-#    competencia["logInv1ANDVOL"] = competencia["logInv1"]/competencia["VOL_FISICO1"]
-#    competencia = add_previous(competencia,["INVERSION_FIRST1","INVERSION_FIRST2"],"INVERSION_FIRST")
-#    competencia = add_previous(competencia,["INVERSION_MIDDLE1","INVERSION_MIDDLE2"],"INVERSION_MIDDLE").drop(["INVERSION_MIDDLE"],axis = 1)
-#    competencia = add_previous(competencia,["INVERSION_LAST1","INVERSION_LAST2"],"INVERSION_LAST").drop(["INVERSION_LAST"],axis = 1)
-#    
-#    # le agrego GRPS. Primero lo corro 1 mes para que pueda aprender del pasado
-#    GRPS = pd.read_csv(fileIn + '\\'+"GRPS_2009a2018.csv",sep = ";",encoding = "ANSI")
-#    GRPS = GRPS.loc[binary_gen(GRPS,marcas_competencia,categoria)]
-#    GRPS = GRPS.groupby(['ANO'])[['UNIVERSE_TVA','UNIVERSE_TVC']].sum()
-#    GRPS = GRPS.reset_index()
-#    GRPS["UNIVERSE"] = GRPS["UNIVERSE_TVA"] + GRPS["UNIVERSE_TVC"]
-#    GRPS = add_previous(GRPS,["UNIVERSE1","UNIVERSE2"],"UNIVERSE").drop(["UNIVERSE"],axis = 1)
-#    competencia = pd.merge(competencia,GRPS[['ANO',"UNIVERSE1","UNIVERSE2"]],on = ['ANO'], how = "left")
-#    competencia["CPR1"] = competencia["INVERSION1"]/competencia["UNIVERSE1"]
-#    competencia["CPR2"] = competencia["INVERSION2"]/competencia["UNIVERSE2"]
-#    competencia["Inv_avisos1"] = competencia["INVERSION1"]/competencia["CANT_AVISOS1"]
-#    competencia["Inv_avisos2"] = competencia["INVERSION2"]/competencia["CANT_AVISOS2"]
-#    
-#    # agrego variables macro
-#    preci = pd.read_csv(fileIn + '\\'+"precipitaciones_historico.csv",sep = ";")
-#    preci = preci.groupby(["ANO"])["Precipitaciones"].sum().reset_index()
-#    temp = pd.read_csv(fileIn + '\\'+"temperatura_historico.csv",sep = ";")
-#    temp = temp.groupby(["ANO"])[['tempMax', 'tempMin', 'tempAvg']].mean().reset_index()
-#    PBI = pd.read_csv(fileIn + '\\'+"PBI_historico.csv",sep = ";")
-#    PBI = PBI.groupby(["ANO"])["PBI"].sum().reset_index()
-#    IPC = IPC.groupby(["ANO"])["IPCcongreso"].sum().reset_index()
-#    poblacion = pd.read_csv(fileIn + '\\'+"poblacion_historico.csv",sep = ";")
-#    inflacion_medios = pd.read_csv(fileIn + '\\'+"inflacion_medios_historico.csv",sep = ";")
-#    competencia = pd.merge(competencia,preci,on=["ANO"])
-#    competencia = pd.merge(competencia,temp,on = ['ANO'])
-#    competencia = pd.merge(competencia,IPC[["IPCcongreso","ANO"]],on=["ANO"])
-#    competencia = pd.merge(competencia,PBI,on = ['ANO'])
-#    competencia = pd.merge(competencia,poblacion,on = ['ANO'])
-#    competencia = pd.merge(competencia,inflacion_medios,on = ['ANO'])
-#    
-#    return competencia
-#
-#
-#
-#data = pd.read_excel("Inversion-Argentina- Marzo18.xlsx",sheet_name = "Actualizado a Marzo 2018")
-#data2 = pd.read_excel("Inversiones 2009-2011.xls",sheet_name = "Resumen de Inversiones")
-#data3 = pd.read_excel("Inversiones 2012-2013.xls",sheet_name = "Resumen de Inversiones")
-#data = data.drop(['Categoría KO', 'Marca KO','MES2','Seg Promedio'],axis = 1)
-#data = data.append(data2,ignore_index = True)
-#data = data.append(data3,ignore_index = True)
-#data = data.loc[data["Clase de Vehículo"] != "Internet"] # saco internet que no tiene nada interesante...
-#tabla_medios = pd.read_excel("TablaMedios.xlsx")
-#data = pd.merge(data,tabla_medios,on = "Clase de Vehículo")
-#data2 = data.loc[(data["Marca KO"] == "SEVEN UP") & (data.Año == 2016)]["Inversión"].sum()
-
 ######################################################################################################
 
 #Para 2019:
@@ -562,43 +407,43 @@ def armar_data(x,year,inv1):
    
     return pd.DataFrame([{'VOL_FISICO2':vol_f,'INVERSION_MIDDLE2':inv_middle,'INVERSION1':inv1,'INVERSION2':inv2}])[['VOL_FISICO2', 'INVERSION_MIDDLE2', 'INVERSION2', 'INVERSION1']]
 
-marcas_competencia = [['PEPSI','MANAOS'],['PASO DE LOS TOROS','SEVENUP'],['VILLA DEL SUR','VILLAVICENCIO'],['BAGGIO'],['H2OH!','VILLAVICENCIO','VILLA DEL SUR LEVITE'],['GATORADE']]
+marcas_competencia = OMMITED_BRAND
 categorias = ['SSDs - COLAS','SSDs - FLAVORS','PLAIN WATER','JUGOS','FLAVOURED WATER','ISOTONICS']
-marcas_KO = [['CCTM'],['FANTA','SPRITE','CRUSH','SCHWEPPES'],['BONAQUA','KIN','SMARTWATER'],['CEPITA','ADES'],['AQUARIUS','FUZE TEA','VITAMIN WATER'],['POWERADE']]
+marcas_KO = OMMITED_BRAND
 
-marca = ['PEPSI','MANAOS']
+marca = OMMITED_BRAND
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'SSDs - COLAS')]
-competenciaFinal = armar_data(competenciaFinal,2019,54283696.38)
+competenciaFinal = armar_data(competenciaFinal,2019,OMMITED_NUMBER)
 print(marca, ": ",modelo.predict(competenciaFinal)[0])
 
-marca = ['PASO DE LOS TOROS','SEVENUP']
+marca = OMMITED_BRAND
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'SSDs - FLAVORS')]
-competenciaFinal = armar_data(competenciaFinal,2019,20540630.32)
+competenciaFinal = armar_data(competenciaFinal,2019,OMMITED_NUMBER)
 print(marca, ": ",modelo.predict(competenciaFinal)[0])
 
-marca = ['VILLA DEL SUR','VILLAVICENCIO']
+marca = OMMITED_BRAND
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'PLAIN WATER')]
-competenciaFinal = armar_data(competenciaFinal,2019,43575694.72)
+competenciaFinal = armar_data(competenciaFinal,2019,OMMITED_NUMBER)
 print(marca, ": ",modelo.predict(competenciaFinal)[0])
 
-marca = ['BAGGIO']
+marca = OMMITED_BRAND
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'JUGOS')]
-competenciaFinal = armar_data(competenciaFinal,2019,5810465.714)
+competenciaFinal = armar_data(competenciaFinal,2019,OMMITED_NUMBER)
 print(marca, ": ",modelo.predict(competenciaFinal)[0])
 
-marca = ['GATORADE']
+marca = OMMITED_BRAND
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'ISOTONICS')]
 competenciaFinal = armar_data(competenciaFinal,2018,0)
 print(marca, ": ",modelo.predict(competenciaFinal)[0])
-marca = ['GATORADE']
+marca = OMMITED_BRAND
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'ISOTONICS')]
-competenciaFinal = armar_data(competenciaFinal,2019,8405084.553)
+competenciaFinal = armar_data(competenciaFinal,2019,OMMITED_NUMBER)
 print(marca, ": ",modelo.predict(competenciaFinal)[0])
 
 competenciaFinal = pd.read_csv(fileIn + '\\'+ "data_flavoured.csv",sep = ";")
 competenciaFinal = competenciaFinal.groupby(['ANO','MES'])[['VOL_FISICO','CANT_AVISOS','INVERSION']].sum()
 competenciaFinal = competenciaFinal.reset_index()
 print('FLAVOURED: ',modelo.predict(armar_data(competenciaFinal,2018,0) ))
-print('FLAVOURED: ',modelo.predict(armar_data(competenciaFinal,2019,24509150.26) ))
+print('FLAVOURED: ',modelo.predict(armar_data(competenciaFinal,2019,OMMITED_NUMBER) ))
 competenciaFinal = competenciaFinal.groupby(['ANO'])[['VOL_FISICO','CANT_AVISOS','INVERSION']].sum()
 competenciaFinal = competenciaFinal.reset_index()
