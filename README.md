@@ -11,5 +11,5 @@ My input data was conposed by:
 
 ## Final Pipeline:
 
-![Screenshot](pipeline.png)
+![Screenshot](Pipeline.png)
 
