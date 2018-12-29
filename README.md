@@ -1,4 +1,4 @@
-# InversionForecast
+# Inversion Forecast
 
 This proyect yas quite challenging because I had to predict the investment of the competitors of 4 South American countries. The problema here was that I only had 10 years of history and they wanted to predict 2 years ahead! So I decided to use models with high bias and trait data in a very carefully way. I land on an R2 of 0.7... kind of acceptable for this problem.
 
