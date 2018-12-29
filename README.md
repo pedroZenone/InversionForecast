@@ -9,3 +9,7 @@ My input data was conposed by:
 - Macroeconomic data (inflation, demos, PBI, etc)
 - Weather data (without sense.. because it was investment not sales but I forced to added it)
 
+## Final Pipeline:
+
+![Screenshot](pipeline.png)
+
