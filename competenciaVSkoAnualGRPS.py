@@ -182,7 +182,7 @@ inversion = inversion.groupby(['DATE','ANO','MES','CATEGORIA','MARCA','ANUNCIANT
 inversion = inversion.reset_index()
 
 # saco el outlier
-inversion = inversion.loc[~((inversion.MARCA == "BAGGIO") & (inversion.ANO == 2011))]
+inversion = inversion.loc[~((inversion.MARCA == "OMMITED_BRAND") & (inversion.ANO == 2011))]
 
 # @brief: competencia_generator te genera un dataframe con la competencia y features agregados.
 # @param marcas_competencia: lista de marcas de la competencia.
@@ -266,12 +266,12 @@ def competencia_generator(marcas_competencia,categoria,IPC):
     return competencia
 
 # comienzo a generarme el dataframe apendeado con todas las competencias
-competencia1 = competencia_generator(['PEPSI','MANAOS'],'SSDs - COLAS',IPC.copy())
-competencia1 = competencia1.append(competencia_generator(['PASO DE LOS TOROS','MANAOS','SEVENUP'],'SSDs - FLAVORS',IPC.copy()),ignore_index = True)
-competencia1 = competencia1.append(competencia_generator(['VILLA DEL SUR','VILLAVICENCIO'],'PLAIN WATER',IPC.copy()),ignore_index = True)
-competencia1 = competencia1.append(competencia_generator(['BAGGIO'],'JUGOS',IPC.copy()),ignore_index = True)
-competencia1 = competencia1.append(competencia_generator(['GATORADE'],'ISOTONICS',IPC.copy()),ignore_index = True)
-competencia1 = competencia1.append(competencia_generator(['H2OH!','VILLAVICENCIO','VILLA DEL SUR LEVITE'],'FLAVOURED WATER',IPC.copy()),ignore_index = True)
+competencia1 = competencia_generator(['OMMITED_BRAND'],'SSDs - COLAS',IPC.copy())
+competencia1 = competencia1.append(competencia_generator(['POMMITED_BRAND'],'SSDs - FLAVORS',IPC.copy()),ignore_index = True)
+competencia1 = competencia1.append(competencia_generator([OMMITED_BRAND],'PLAIN WATER',IPC.copy()),ignore_index = True)
+competencia1 = competencia1.append(competencia_generator(['OMMITED_BRAND'],'JUGOS',IPC.copy()),ignore_index = True)
+competencia1 = competencia1.append(competencia_generator(['OMMITED_BRAND'],'ISOTONICS',IPC.copy()),ignore_index = True)
+competencia1 = competencia1.append(competencia_generator(['OMMITED_BRAND'],'FLAVOURED WATER',IPC.copy()),ignore_index = True)
 
 # Le saco 2018 y 2009 ya que no tienen data potable par ala prediccion (muchos nan)
 competencia = competencia1.loc[competencia1.ANO < 2018]
@@ -352,9 +352,9 @@ y = competencia["target"]
 modelo = LinearRegression().fit(X,y)
 
 # Para GRPS:
-marcas_competencia = [['PEPSI','MANAOS'],['PASO DE LOS TOROS','SEVENUP'],['VILLA DEL SUR','VILLAVICENCIO'],['BAGGIO'],['H2OH!','VILLAVICENCIO','VILLA DEL SUR LEVITE'],['GATORADE']]
+marcas_competencia = OMMITED_BRAND
 categorias = ['SSDs - COLAS','SSDs - FLAVORS','PLAIN WATER','JUGOS','FLAVOURED WATER','ISOTONICS']
-marcas_KO = [['CCTM'],['FANTA','SPRITE','CRUSH','SCHWEPPES'],['BONAQUA','KIN','SMARTWATER'],['CEPITA','ADES'],['AQUARIUS','FUZE TEA','VITAMIN WATER'],['POWERADE']]
+marcas_KO = OMMITED_BRAND
 
 def armar_data(x,year,inv1,inv):
     
@@ -381,41 +381,41 @@ def armar_data(x,year,inv1,inv):
 
     return pd.DataFrame([{'INVERSION': inv,'INVERSION_FIRST2':inv_first2,'INVERSION_MIDDLE2':inv_middle2,'logInv1':loginv1,'INVERSION1':inv1}])[['INVERSION', 'INVERSION_FIRST2', 'INVERSION_MIDDLE2', 'logInv1', 'INVERSION1']]
 
-marca = ['PEPSI','MANAOS']
+marca = [OMMITED_BRAND]
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'SSDs - COLAS')]
-competenciaFinal = armar_data(competenciaFinal,2018,0,61835973.01)
+competenciaFinal = armar_data(competenciaFinal,2018,0,OMMITED_NUM)
 print(marca, ": ",modelo.predict(competenciaFinal)[0] ) 
-marca = ['PEPSI','MANAOS']
+marca = ['OMMITED_BRAND]
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'SSDs - COLAS')]
-competenciaFinal = armar_data(competenciaFinal,2019,61835973.01,67624170.43)
+competenciaFinal = armar_data(competenciaFinal,2019,OMMITED_NUM.01,OMMITED_NUM.43)
 print(marca, ": ",modelo.predict(competenciaFinal)[0] ) 
 
-marca = ['PASO DE LOS TOROS','SEVENUP']
+marca = [OMMITED_BRAND]
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'SSDs - FLAVORS')]
-competenciaFinal = armar_data(competenciaFinal,2018,0,19440476.51)
+competenciaFinal = armar_data(competenciaFinal,2018,0,OMMITED_NUM.51)
 print(marca, ": ",modelo.predict(competenciaFinal)[0] ) 
-marca = ['PASO DE LOS TOROS','SEVENUP']
+marca = ['OMMITED_BRAND]
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'SSDs - FLAVORS')]
-competenciaFinal = armar_data(competenciaFinal,2018,19440476.51,20852350.61)
+competenciaFinal = armar_data(competenciaFinal,2018,OMMITED_NUM.51,OMMITED_NUM.61)
 print(marca, ": ",modelo.predict(competenciaFinal)[0] ) 
 
-marca = ['VILLA DEL SUR','VILLAVICENCIO']
+marca = [OMMITED_BRAND]
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'PLAIN WATER')]
-competenciaFinal = armar_data(competenciaFinal,2018,0,47642766.39)
+competenciaFinal = armar_data(competenciaFinal,2018,0,OMMITED_NUM.39)
 print(marca, ": ",modelo.predict(competenciaFinal)[0] ) 
-marca = ['VILLA DEL SUR','VILLAVICENCIO']
+marca = [OMMITED_BRAND]
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'PLAIN WATER')]
-competenciaFinal = armar_data(competenciaFinal,2018,47642766.39,48954966.61)
+competenciaFinal = armar_data(competenciaFinal,2018,OMMITED_NUM.39,OMMITED_NUM.61)
 print(marca, ": ",modelo.predict(competenciaFinal)[0] ) 
 
-# Baggio como daba mal lo hice con GAM para que aprenda solo del historico... y predigo TRPS
-#marca = ['BAGGIO']
+# OMMITED_BRAND como daba mal lo hice con GAM para que aprenda solo del historico... y predigo TRPS
+#marca = ['OMMITED_BRAND']
 #competenciaFinal = inversion.loc[binary_gen(inversion,marca,'JUGOS')]
-#competenciaFinal = armar_data(competenciaFinal,2018,0,3679467)
+#competenciaFinal = armar_data(competenciaFinal,2018,0,OMMITED_NUM)
 #print(marca, ": ",modelo.predict(competenciaFinal)[0] ) 
-#marca = ['BAGGIO']
+#marca = ['OMMITED_BRAND']
 #competenciaFinal = inversion.loc[binary_gen(inversion,marca,'JUGOS')]
-#competenciaFinal = armar_data(competenciaFinal,2018,3679467,4610852.382)
+#competenciaFinal = armar_data(competenciaFinal,2018,OMMITED_NUM,OMMITED_NUM.382)
 #print(marca, ": ",modelo.predict(competenciaFinal)[0] ) 
 
 from pygam import LinearGAM
@@ -429,104 +429,33 @@ gam = LinearGAM(n_splines=5,spline_order=3).gridsearch(GRPS.ANO.as_matrix(), GRP
 gam.summary()
 #x = np.linspace(2009, 2019, 50)  # testear modelo
 #plt.plot(x,gam.predict(x),'r*');plt.plot(GRPS.ANO.as_matrix(), GRPS.UNIVERSE.as_matrix(),'b+')
-print('BAGGIO con GAM: ',gam.predict([2018,2019]))
+print('OMMITED con GAM: ',gam.predict([2018,2019]))
 
 
-marca = ['GATORADE']
+marca = ['OMMITED_BRAND']
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'ISOTONICS')]
-competenciaFinal = armar_data(competenciaFinal,2018,0,16439311.29)
+competenciaFinal = armar_data(competenciaFinal,2018,0,.29)
 print(marca, ": ",modelo.predict(competenciaFinal)[0] ) 
-marca = ['GATORADE']
+marca = ['OMMITED_BRAND']
 competenciaFinal = inversion.loc[binary_gen(inversion,marca,'ISOTONICS')]
-competenciaFinal = armar_data(competenciaFinal,2018,16439311.29,14800412.61)
+competenciaFinal = armar_data(competenciaFinal,2018,.29,.61)
 print(marca, ": ",modelo.predict(competenciaFinal)[0] ) 
 
 competenciaFinal = pd.read_csv(fileIn + '\\'+ "data_flavoured.csv",sep = ";")
 competenciaFinal = competenciaFinal.groupby(['ANO','MES'])[['VOL_FISICO','CANT_AVISOS','INVERSION']].sum()
 competenciaFinal = competenciaFinal.reset_index()
-print("Flavoured: ", modelo.predict(armar_data(competenciaFinal,2018,0,28595239.26)))
-print("Flavoured: ", modelo.predict(armar_data(competenciaFinal,2019,28595239.26,28961122.2)))
+print("Flavoured: ", modelo.predict(armar_data(competenciaFinal,2018,0,.26)))
+print("Flavoured: ", modelo.predict(armar_data(competenciaFinal,2019,.26,.2)))
 competenciaFinal = competenciaFinal.groupby(['ANO'])[['VOL_FISICO','CANT_AVISOS','INVERSION']].sum()
 competenciaFinal = competenciaFinal.reset_index()
 
 # Levanto las aguas saborizadas:
 
 data = pd.read_excel("GRPS-Argentina2013-Feb2018.xlsx",sheet_name = "Actualizado al 31-03")
-data = data.loc[((data.Marca == "VILLA DEL SUR")&(data.Segmento == "AGUAS SABORIZADAS SIN GAS"))|((data.Marca == "SEVEN UP")&(data.Segmento == "AGUAS SABORIZADAS CON GAS"))]
+data = data.loc[((data.Marca == "OMMITED_BRAND")&(data.Segmento == "AGUAS SABORIZADAS SIN GAS"))|((data.Marca == "OMMITED_BRAND")&(data.Segmento == "OMMITED_BRAND"))]
 data["UNIVERSE"] = data["Universe"]*data["Duración (seg)"]/30
 data = data[["Marca","Mes","Año","UNIVERSE"]]
 data.columns = ["MARCA","MES","ANO","UNIVERSE"]
 data = data.groupby(['ANO'])[['UNIVERSE']].sum()
 data = data.reset_index()
 
-
-
-#data = pd.read_excel("Inversion-Argentina- Marzo18.xlsx",sheet_name = "Actualizado a Marzo 2018")
-#data = data.loc[data["Clase de Vehículo"] != "Internet"] # saco internet que no tiene nada interesante...
-#tabla_medios = pd.read_excel("TablaMedios.xlsx")
-#data2 = pd.merge(data,tabla_medios,on = "Clase de Vehículo")
-#
-#tabla_marcas = pd.read_excel("Conversores_Competencia_Nuevo_050618_V17.xlsx",sheet_name = "Base Conversores")
-#tabla_marcas = tabla_marcas.loc[tabla_marcas.Pais == "ARGENTINA"]
-#data_norm = pd.merge(data2,tabla_marcas,left_on = ["Marca","Subsector"],right_on = ["Marca","Categoria/Subsector/Industry"])
-#
-## ---------------------------------------------------------------------------------------------
-##○ Si quisiese identificar las marcas que no detecta... igual seguro son las mismas que la lista negra. Mejora a posterior: llamar a un store que ya lo tengo hecho en SQL
-#data_marcas_non = pd.merge(data,tabla_marcas,how = "left", left_on=["Subsector","Marca"],right_on=["Categoria/Subsector/Industry","Marca"])
-#data_marcas_non["Marca KO_y"] = data_marcas_non["Marca KO_y"].astype(str)
-#data_marcas_non = data_marcas_non.loc[data_marcas_non["Marca KO_y"] == "nan"]
-#tabla_listaNegra =  pd.read_excel("Conversores_Competencia_Nuevo_050618_V17.xlsx",sheet_name = "Lista Negra")
-#tabla_listaNegra = tabla_listaNegra.loc[tabla_listaNegra.Pais == "ARGENTINA"]
-#data_marcas_non2 = pd.merge(data_marcas_non,tabla_listaNegra, left_on=["Subsector","Marca"],right_on=["Categoria/Subsector/Industry","Marca"])
-## ---------------------------------------------------------------------------------------------
-#
-#IBOPEinversion_depurado = data_norm[["MES2","Año","Categoría KO","Marca KO_y","Anunciante KO","Prioridad","Sub-Categoria","Medio KO","Seg Promedio","Vol. Físico","Cant. de Avisos","Inversión"]]
-#data = data.loc[((data["Marca KO"] == "VILLAVICENCIO LIV") | (data["Marca KO"] == "VILLA DEL SUR LEVITE") | (data["Marca KO"] == "H2OH!")) & (data["Categoría KO"] == "FLAVOURED WATER") ]
-#data = pd.merge(data,tabla_medios,on = "Clase de Vehículo")
-#data["Prioridad"] = "Core"
-#data["Sub-Categoria"] = "asd"
-#data = data[["MES2","Año","Categoría KO","Marca KO","Anunciante","Prioridad","Sub-Categoria","Medio KO","Seg Promedio","Vol. Físico","Cant. de Avisos","Inversión"]]
-#data.columns = ['MES','ANO','CATEGORIA','MARCA','ANUNCIANTE','PRIORIDAD','SUBCATEGORIA','MEDIO','SEG_PROM','VOL_FISICO','CANT_AVISOS','INVERSION']
-#IBOPEinversion_depurado.columns = ['MES','ANO','CATEGORIA','MARCA','ANUNCIANTE','PRIORIDAD','SUBCATEGORIA','MEDIO','SEG_PROM','VOL_FISICO','CANT_AVISOS','INVERSION']
-#IBOPEinversion_depurado = IBOPEinversion_depurado.append(data,ignore_index = True)
-#
-#month_norm = {'Ene':'1','Feb':'2','Mar':'3','Abr':'4','May':'5','Jun':'6','Jul':'7','Ago':'8','Sep':'9','Oct':'10','Nov':'11','Dic':'12'}
-#IBOPEinversion_depurado.MES = IBOPEinversion_depurado.MES.apply(lambda x: month_norm[x])
-#aux = IBOPEinversion_depurado[["ANO","MES"]]; aux.columns = ['year','month']; aux['day'] = '1'
-#aux = pd.to_datetime(aux)
-#IBOPEinversion_depurado["DATE"] = aux 
-#
-#IBOPEinversion_depurado.to_csv( 'IBOPEinversion_depurado_Todo.csv' ,index = False,sep = ';',encoding = 'ANSI')
-
-# cepita, cctm, bonaqua
-# villavicencio falta dat
-import seaborn as sns
-marcas_competencia = [['PEPSI','MANAOS'],['PASO DE LOS TOROS','SEVENUP'],['VILLA DEL SUR','VILLAVICENCIO'],['BAGGIO'],['H2OH!','VILLAVICENCIO','VILLA DEL SUR LEVITE'],['GATORADE']]
-categorias = ['SSDs - COLAS','SSDs - FLAVORS','PLAIN WATER','JUGOS','FLAVOURED WATER','ISOTONICS']
-marcas_KO = [['CCTM'],['FANTA','SPRITE','CRUSH','SCHWEPPES'],['BONAQUA','KIN','SMARTWATER'],['CEPITA','ADES'],['AQUARIUS','FUZE TEA','VITAMIN WATER'],['POWERADE']]
-
-inversion = pd.read_csv(fileIn + '\\'+ 'IBOPEinversion_depurado3.csv',sep = ';',encoding = 'ANSI')
-inversion = pd.merge(inversion,IPC_byAno,on=["ANO"])
-#inversion["INVERSIONdesafectada"] = inversion.apply(IPC_off,axis = 1)
-#inversion["INVERSION"] = inversion["INVERSIONdesafectada"]
-inversion = inversion.groupby(['MES','ANO','CATEGORIA','MARCA','ANUNCIANTE','SUBCATEGORIA','PRIORIDAD'])[['VOL_FISICO','CANT_AVISOS','INVERSION']].sum()
-inversion = inversion.reset_index()
-
-
-GRPS_ = pd.read_csv(fileIn + '\\'+"GRPS_2009a2018.csv",sep = ";",encoding = "ANSI")
-for i in range(len(categorias)):
-    GRPS = GRPS_.loc[binary_gen(GRPS_,marcas_competencia[i],categorias[i])]
-    GRPS = pd.merge(GRPS,inversion,on = ['ANO','MES','CATEGORIA','MARCA','ANUNCIANTE','SUBCATEGORIA'])
-    GRPS = GRPS.groupby(['ANO'])[['UNIVERSE_TVA','UNIVERSE_TVC','INVERSION']].sum()
-    GRPS = GRPS.reset_index()
-    GRPS["UNIVERSE"] = GRPS["UNIVERSE_TVA"] + GRPS["UNIVERSE_TVC"]
-    GRPS["CPR"] =GRPS["UNIVERSE"]/ GRPS["INVERSION"]
-    plt.figure()
-    sns.barplot(x = "ANO",y = "CPR",data = GRPS)
-
-GRPS = GRPS_.loc[GRPS_.MARCA == "CCTM"]
-GRPS = GRPS.groupby(['ANO'])[['UNIVERSE_TVA','UNIVERSE_TVC']].sum()
-GRPS = GRPS.reset_index()
-GRPS["UNIVERSE"] = GRPS["UNIVERSE_TVA"] + GRPS["UNIVERSE_TVC"]
-sns.barplot(x = "ANO",y = "UNIVERSE",data = GRPS )
-inversion_ = inversion.loc[(inversion.MARCA == "PEPSI") & (inversion.ANO == 2017)]
