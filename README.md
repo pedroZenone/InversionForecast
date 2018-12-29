@@ -9,7 +9,14 @@ My input data was conposed by:
 - Macroeconomic data (inflation, demos, PBI, etc)
 - Weather data (without sense.. because it was investment not sales but I forced to added it)
 
-## Final Pipeline:
+#### Final Pipeline:
 
 ![Screenshot](Pipeline.png)
+
+
+#### Some comments of the code:
+
+- competenciaVSkoAnual2.py Forcast the potencial investment for the punctual brand, opened by category. The model was done in two steps because the amount of history wasn't enough, so I predict 2018 and then 2019 whith 2018 output.
+- competenciaVSkoAnualGRPS.py Forcast the potencial TRPs for the punctual brand, opened by category. The model need the forecasted investment of 2018 and 2019. This is because CPR (cost per raiting) must move in a coherent way. 
+
 
